@@ -37,3 +37,10 @@ ef text_response(text):
     }
 f __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
+flask
+ervices:
+  - type: web
+    name: kakao-rank-bot
+    env: python
+    buildCommand: ""
+    startCommand: "python app.py"
