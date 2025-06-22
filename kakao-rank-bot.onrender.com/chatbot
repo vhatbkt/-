@@ -1,0 +1,46 @@
+from flask import Flask, request, jsonifyMore actions
+app = Flask(__name__)
+user_activity = {
+    "홍길동": 50,
+    "김철수": 75,
+    "이영희": 32
+@app.route("/chatbot", methods=["POST"])
+def chatbot():
+    body = request.get_json()
+    utterance = body['userRequest']['utterance'].strip()
+    user_name = body['userRequest']['user'].get('properties', {}).get('nickname', '익명')
+f utterance == "!랭킹":
+        return jsonify(rank_response())
+    elif utterance == "!내점수":
+        return jsonify(score_response(user_name))
+    else:
+        return jsonify(text_response("명령어: !랭킹 / !내점수"))
+def rank_response():
+    sorted_users = sorted(user_activity.items(), key=lambda x: x[1], reverse=True)
+    rank_text = "\n".join([f"{i+1}. {name} - {score}점" for i, (name, score) in enumerate(sorted_users)])
+    return text_response("🏆 랭킹\n\n" + rank_text)
+ef score_response(name):
+    score = user_activity.get(name, 0)
+    return text_response(f"{name}님의 점수는 {score}점입니다.")
+ef text_response(text):
+    return {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": text
+                    }
+                }
+            ]
+        }
+    }
+f __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000)
+flask
+ervices:
+  - type: web
+    name: kakao-rank-bot
+    env: python
+    buildCommand: ""
+    startCommand: "python app.py"
